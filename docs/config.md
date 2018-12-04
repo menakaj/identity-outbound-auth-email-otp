@@ -1,22 +1,23 @@
+# Configuring Multi-factor Authentication using EmailOTP
 This section provides the instructions to configure multi-factor authentication (MFA) using Email One Time Password (Email OTP) in WSO2 Identity Server (WSO2 IS). The Email OTP enables a one-time password (OTP) to be used at the second step of MFA. For more information on the WSO2 Identity Server Versions supported by the connector, see the IS Connector store.
 
 Let's take a look at the tasks you need to follow to configure MFA using Email OTP:
 
-- Enabling email configuration on WSO2 IS
-- Configure the Email OTP provider
-- Deploy the travelocity.com sample
-- Configure the Identity Provider
-- Configure the Service Provider
-- Update the email address of the user
-- Configure the user claims
-- Test the sample
+- [Enabling email configuration on WSO2 IS](#enabling-email-configuration-on-wso2-is)
+- [Configure the Email OTP provider](#configure-the-email-otp-provider)
+- [Deploy the travelocity.com sample](#deploy-the-travelocity.com-sample)
+- [Configure the Identity Provider](#configure-the-identity-provider)
+- [Configure the Service Provider](#configure-the-service-provider)
+- [Update the email address of the user](#update-the-email-address-of-the-user)
+- [Configure the user claims](#configure-the-user-claims)
+- [Test the sample](#test-the-sample)
 
 **Before you begin!**
 
    To ensure you get the full understanding of configuring Email OTP with WSO2 IS, the sample travelocity application is used in this use case. The samples run on the Apache Tomcat server and are written based on Servlet 3.0. Therefore, download Tomcat 7.x from here.
    Install Apache Maven to build the samples. For more information, see Installation Prerequisites.
 
-**Enabling email configuration on WSO2 IS**
+### Enabling email configuration on WSO2 IS
 
 Follow the steps below to configure WSO2 IS to send emails once the Email OTP is enabled.
 
@@ -95,7 +96,7 @@ Follow the steps below to configure WSO2 IS to send emails once the Email OTP is
    
    7. Start WSO2 IS.
 
-**Configure the Email OTP provider**
+### Configure the Email OTP provider
 
 You can send the One Time Password (OTP) using Gmail APIs or using SendGrid. Follow the steps given below to configure Gmail APIs as the mechanisam to send the OTP.
 
@@ -117,14 +118,19 @@ You can send the One Time Password (OTP) using Gmail APIs or using SendGrid. Fol
    6. Click Credentials and click the Create credentials drop-down.
 
    7. Select OAuth client ID option.
+   
+   ![](image2017-11-17_18-2-24.png)
+   
    8. Click Configure consent screen.
+   
+   
    9. Enter the Product name that needs to be shown to users, enter values to any other fields you prefer to update, 
    and click Save.
 
    10. Select the Web application option.
    11. Enter https://localhost:9443/commonauth as the Authorize redirect URIs text-box, and click Create.
 
-    The client ID and the client secret are displayed.
+   The client ID and the client secret are displayed.
     Copy the client ID and secret and keep it in a safe place as you require it for the next step.
 
    12. Copy the URL below and replace the <ENTER_CLIENT_ID> tag with the generated Client ID. This is required to 
@@ -135,12 +141,12 @@ You can send the One Time Password (OTP) using Gmail APIs or using SendGrid. Fol
    `https://accounts.google.com/o/oauth2/auth?redirect_uri=https%3A%2F%2Flocalhost%3A9443%2Fcommonauth&response_type
    =code&client_id=<ENTER_CLIENT_ID>&scope=http%3A%2F%2Fmail.google.com&approval_prompt=force&access_type=offline
    `
-   12. Paste the updated URL into your browser.
+   13. Paste the updated URL into your browser.
        - Select the preferred Gmail account with which you wish to proceed.
        - Click Allow.
        - Obtain the authorization code using a SAML tracer on your browser.
 
-   13. To generate the access token, copy the following cURL command and replace the following place holders:
+   14. To generate the access token, copy the following cURL command and replace the following place holders:
        - **<CLIENT-ID>** : Replace this with the client ID obtained in Step 10 above.
        - **<CLIENT_SECRET>** : Replace this with the client secret obtained in Step 10 above.
        - **<AUTHORIZATION_CODE>** : Replace this with the authorization code obtained in Step 12 above.
@@ -163,50 +169,39 @@ You can send the One Time Password (OTP) using Gmail APIs or using SendGrid. Fol
 
 <\<IMAGE>>
 
-   14. Update the following configurations under the  <AuthenticatorConfigs>  section in the  
+   15. Update the following configurations under the  <AuthenticatorConfigs>  section in the  
    <IS_HOME>/repository/conf/identity/application-authentication.xml  file. 
         
         - If you need to send the content in a payload, you can introduce a property in a format <API> Payload and 
         define the value. Similarly, you can define the Form Data.FormdataforSendgridAPIisgivenasan example.
-        You can use <API> URLParams, <API>AuthTokenType, <API>Failure and <API>TokenEndpoint property formats to specify the URL parameters, Authorization token type, Message to identify failure and Endpoint to get access token from refresh token respectively.
-        Value of <API> URLParams should be like; api_user=<API_USER>&api_key=<API_KEY>&data=<DATA>&list<LIST>
+        - You can use \<API> URLParams, \<API>AuthTokenType, \<API>Failure and \<API>TokenEndpoint property formats to 
+        specify the URL parameters, Authorization token type, Message to identify failure and Endpoint to get access token from refresh token respectively.
+        - Value of <API> URLParams should be like; api_user=<API_USER>&api_key=<API_KEY>&data=<DATA>&list<LIST>
 
    |Property|Description|
    |--------|-----------|
-   |**GmailClientId**	|Enter the Client ID you got in step 10.Example: 501390351749-ftjrp3ld9da4ohd1rulogejscpln646s
-   .apps.googleusercontent.com|
-   |**GmailClientSecret**|	Enter the client secret you got in step 10.
-    Example: dj4st7_m3AclenZR1weFNo1V|
-   |**SendgridAPIKey**	|This property is only required if you are using the Sengrid method. Since you are using Gmail 
-   APIs, keep the default value.|
-   | **GmailRefreshToken**|	Enter the refresh token that you got as the response in step 12. Example: 
-    1/YgNiepY107SyzJdgpynmf-eMYP4qYTPNG_L73MXfcbv|
-   |**GmailEmailEndpoint**	|Enter your username of your Gmail account in place of the [userId] place holder. Example: 
-   https://www.googleapis.com/gmail/v1/users/alex@gmail.com/messages/send|
-   |**SendgridEmailEndpoint**|	This property is only required if you are using the Sengrid method. Since you are using 
-   Gmail APIs, keep the default value.|
+   |**GmailClientId**	|Enter the Client ID you got in step 10.Example: 501390351749-ftjrp3ld9da4ohd1rulogejscpln646s.apps.googleusercontent.com|
+   |**GmailClientSecret**|	Enter the client secret you got in step 10. Example: dj4st7_m3AclenZR1weFNo1V|
+   |**SendgridAPIKey**	|This property is only required if you are using the Sengrid method. Since you are using Gmail APIs, keep the default value.|
+   | **GmailRefreshToken**|	Enter the refresh token that you got as the response in step 12. Example: 1/YgNiepY107SyzJdgpynmf-eMYP4qYTPNG_L73MXfcbv|
+   |**GmailEmailEndpoint**	|Enter your username of your Gmail account in place of the [userId] place holder. Example: https://www.googleapis.com/gmail/v1/users/alex@gmail.com/messages/send|
+   |**SendgridEmailEndpoint**|	This property is only required if you are using the Sengrid method. Since you are using Gmail APIs, keep the default value.|
    |**accessTokenRequiredAPIs**	| Use the default value.|
-   | **apiKeyHeaderRequiredAPIs**| This property is only required if you are using the Sengrid method. Since you are 
-   using Gmail APIs, keep the default value.|
-   | **SendgridFormData=to**|	This property is only required if you are using the Sengrid method. Since you are using 
-   Gmail APIs, keep the default value.|
-   | **SendgridURLParams**|	This property is only required if you are using the Sengrid method. Since you are using Gmail
-    APIs, keep the default value.|
-    |**GmailAuthTokenType**|	Use the default value.|
+   | **apiKeyHeaderRequiredAPIs**| This property is only required if you are using the Sengrid method. Since you are using Gmail APIs, keep the default value.|
+   | **SendgridFormData=to**|	This property is only required if you are using the Sengrid method. Since you are using Gmail APIs, keep the default value.|
+   | **SendgridURLParams**|	This property is only required if you are using the Sengrid method. Since you are using Gmail APIs, keep the default value.|
+   |**GmailAuthTokenType**|	Use the default value.|
    | **GmailTokenEndpoint**|	Use the the deafult value.|
-    |**SendgridAuthTokenType**|	This property is only required if you are using the Sengrid method. Since you are using 
-    Gmail APIs, keep the default value.|
+   |**SendgridAuthTokenType**|	This property is only required if you are using the Sengrid method. Since you are using Gmail APIs, keep the default value.|
     
-   Click here to see a sample configuration
+   Sample configuration
    
      <AuthenticatorConfig name="EmailOTP" enabled="true">
-        <Parameter name="GmailClientId">501390351749-ftjrp3ld9da4ohd1rulogejscpln646s.apps.googleusercontent.com 
-       </Parameter>
+        <Parameter name="GmailClientId">501390351749-ftjrp3ld9da4ohd1rulogejscpln646s.apps.googleusercontent.com</Parameter>
         <Parameter name="GmailClientSecret">dj4st7_m3AclenZR1weFNo1V</Parameter>
         <Parameter name="SendgridAPIKey">sendgridAPIKeyValue</Parameter>
         <Parameter name="GmailRefreshToken">1/YgNiepY107SyzJdgpynmf-eMYP4qYTPNG_L73MXfcbv</Parameter>
-        <Parameter name="GmailEmailEndpoint">https://www.googleapis.com/gmail/v1/users/alex@gmail
-       .com/messages/send</Parameter>
+        <Parameter name="GmailEmailEndpoint">https://www.googleapis.com/gmail/v1/users/alex@gmail.com/messages/send</Parameter>
         <Parameter name="SendgridEmailEndpoint">https://api.sendgrid.com/api/mail.send.json</Parameter>
         <Parameter name="accessTokenRequiredAPIs">Gmail</Parameter>
         <Parameter name="apiKeyHeaderRequiredAPIs">Sendgrid</Parameter>
@@ -219,7 +214,7 @@ You can send the One Time Password (OTP) using Gmail APIs or using SendGrid. Fol
      </AuthenticatorConfig>
    
 
-**Deploy the travelocity.com sample**
+### Deploy the travelocity.com sample
 
 Follow the steps below to deploy the travelocity.com sample application:
 
@@ -265,7 +260,7 @@ For example, http://localhost:8080/travelocity.com/index.jsp.
 Note: It is recommended that you use a hostname that is not localhost to avoid browser errors. Modify the /etc/hosts entry in your machine to reflect this. Note that localhost is used throughout thisdocumentation as an example, but you must modify this when configuring these authenticators or connectors with this sample application.
 
 
-**Configure the Identity Provider**
+### Configure the Identity Provider
 
 Follow the steps below to add an identity provider:
 
@@ -279,7 +274,7 @@ Follow the steps below to add an identity provider:
 
     You have now added the identity provider.
 
-**Configure the Service Provider**
+### Configure the Service Provider
 
 Follow the steps below add a service provider:
 
@@ -343,7 +338,7 @@ Follow the steps given below to update the user's email address.
         Click Update.
 
 
-**Configure the user claims**
+### Configure the user claims
 
 Follow the steps below to map the user claims:
 
@@ -366,7 +361,7 @@ For more information about claims, see  Adding Claim Mapping.
 
         To disable this claim for the admin user, navigate to Users and Roles > List and click Users. Click on the User Profile link corresponding to admin account and then click Disable EmailOTP. This will disable the second factor authentication for the admin user.
 
-**Test the sample**
+### Test the sample
 
     To test the sample, go to the following URL: http://localhost:8080/travelocity.com
 
