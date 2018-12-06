@@ -11,6 +11,7 @@ Let's take a look at the tasks you need to follow to configure MFA using Email O
 - [Update the email address of the user](#update-the-email-address-of-the-user)
 - [Configure the user claims](#configure-the-user-claims)
 - [Test the sample](#test-the-sample)
+- [Using HTML Templates in Emails](html-support.md)
 
 **Before you begin!**
 
@@ -20,6 +21,8 @@ Let's take a look at the tasks you need to follow to configure MFA using Email O
 ### Enabling email configuration on WSO2 IS
 
 Follow the steps below to configure WSO2 IS to send emails once the Email OTP is enabled.
+
+If you need to use HTML Templates in emails, skip this and check [Using HTML Templates in Emails](html-support.md).
 
    1. Shut down the server if it is running.
 
